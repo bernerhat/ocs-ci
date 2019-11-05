@@ -358,7 +358,7 @@ class Deployment(object):
         # Change monitoring backend to OCS
         if config.ENV_DATA.get('monitoring_enabled') and config.ENV_DATA.get('persistent-monitoring'):
 
-            sc_name = f"{config.ENV_DATA['storage_cluster_name']}-{constants.DEFAULT_SC_RBD}"
+            sc = helpers.default_storage_class(interface_type=constants.CEPHBLOCKPOOL)
 
             # Get the list of monitoring pods
             pods_list = get_all_pods(
@@ -367,7 +367,7 @@ class Deployment(object):
             )
 
             # Create configmap cluster-monitoring-config
-            create_configmap_cluster_monitoring_pod(sc_name)
+            create_configmap_cluster_monitoring_pod(sc.name)
 
             # Take some time to respin the pod
             waiting_time = 45
